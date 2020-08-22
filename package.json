@@ -1,7 +1,7 @@
 {
   "name": "journalbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Node app that takes user input and generates a response through the DeepAI API",
   "repository": "https://github.com/Kmagameguy/journalBot",
   "main": "app.js",
   "scripts": {
