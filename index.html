@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=<device-width>, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <title>JournalBot</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <h2>Welcome to JournalBot!</h2>
+            </div>
+        </div>
+        <form id="form-input" class="mt-5">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="input-area">Give JournalBot a Topic</label>
+                        <input type="text-area" class="form-control" id="input-area" required>
+                        <small id="input-area-help" class="form-text text-muted">JournalBot will use this as a seed to generate the response text</small><br>
+                        <button type="submit" form="form-input" value="Submit" class="btn btn-primary" id="send-btn">Send</button>
+                    </div>
+                </div>
+                <div class="col">
+                    <div id="sbinnala" class="d-none">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="sr-only">Loading response...</span>
+                        </div>
+                        <span class="text-info ml-2 h2">Loading response...</span>
+                    </div>
+                    <div id="output-container">
+                        <h2 id="botHeader"></h2>
+                        <div id="botText"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+    <script>
+        let socket = io();
+
+        function sendRequest() {
+            console.log('request submitted');
+            socket.emit('bot request', $('#input-area').val());
+            $('#input-area').trigger('reset');
+            $('#botHeader').html('');
+            $('#botText').html('');
+            $('#send-btn').prop('disabled',true);
+            $('#sbinnala').removeClass('d-none');
+        }
+
+        function postResults(msg) {
+            console.log('request received');
+            let header = msg.output.split('.')[0];
+            msg.output = msg.output.split('.');
+            msg.output.shift();
+            msg.output = msg.output.join('.').split('<|endoftext|>')[0];
+            $('#botHeader').text(header);
+            $('#botText').html($('<p>').text(msg.output));
+            $('#send-btn').prop('disabled',false);
+            $('#sbinnala').addClass('d-none');
+        }
+        $(() => {
+            $('form').submit((e) => {
+                e.preventDefault();
+                sendRequest();
+                return false;
+            });
+            socket.on('bot response', (msg) => { postResults(msg) });
+        });
+    </script>
+</body>
+</html>
