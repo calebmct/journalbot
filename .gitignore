@@ -26,7 +26,6 @@ node_modules/
 
 # API Key Store
 creds.json
-config.json
 gcloud.js
 
 # Sample Voice Files
