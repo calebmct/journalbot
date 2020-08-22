@@ -48,7 +48,7 @@
         function sendRequest() {
             console.log('request submitted');
             socket.emit('bot request', $('#input-area').val());
-            $('#input-area').trigger('reset');
+            $('#form-input').trigger('reset');
             $('#botHeader').html('');
             $('#botText').html('');
             $('#send-btn').prop('disabled',true);
