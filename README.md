@@ -12,7 +12,8 @@ JournalBot is a barebones [Node](https://nodejs.org) app which creates some ML t
 - Install Node.js
 - Create an account on DeepAI's website and make note of your API Key
 - Clone this repo
-- Add your API Key to `config.json`
+- Create a copy of `config.sample.json` and name it `config.json`
+- Add your API Key into `config.json`
 - Run `npm install`
 &nbsp;  
 ### Running the App
